@@ -1,0 +1,30 @@
+Note: This program is written in Octave. I am including the instructions to install on ubuntu in this README.
+Installation instructions: In the terminal, type in the following commands: 
+	sudo add-apt-repository ppa:picaso/octave
+	sudo apt-get update
+	sudo apt-get install octave
+
+VL-FEAT's implementation of SIFT was used.
+To get vl-feat's sift to work, the following are the instructions:
+1. Install the image toolbox on Octave. Download the image tool box from: http://octave.sourceforge.net/image/
+2. Go to the directory where you kept the downloaded image toolbox from your octave command line interface. type: pkg install "image-toolbox-zip-file-name-should-go-here".
+3. Then, follow the instructions on : http://www.vlfeat.org/install-octave.html
+4. each time you are using the vl-feat's toolbox, you have to run the addpath('path-to-the-vlfeat-toolbox').
+
+That was the background information. Now, for the implementation details...
+
+1. vl-feat's sift implementation was used to get the features for two images.
+2. Then, the features matching is done using euclidean distance as the measure for comparision. I wrote the code for this.
+3. Then, a random set of 20 points are taken from the existing matched points from the previous image. They are first sent through DLT wherein the points are normalized and the transformation matrices are computed and sent back. Then, homography matrix is computed for these normalized points. The homography matrix, thus computed, is multiplied with the corresponding transform matrices to get the actual homography matrix.
+4. This homography matrix is applied to all the matched points and checked if the calculated corresponding pixel locations vary within an error of 3 pixels. These are treated as inliers and the rest are treated as outliers.
+5. Steps, 3 and 4 are done for 200 iterations at the end of which a homography matrix is computed which contains the maximum number of inliers.
+6. Then, for these inliers, a more constricted homographhy matrix is computed. This is the homogrophay transform from one image to the other. DLT, Homography and the RANSAC algorithm mentioned 8. above are written by me.
+7. Next, the images are overlapped as directed by this website here: http://www.vlfeat.org/install-octave.html
+8. The above steps are repeated for all the images in a folder and the image mosaic is computed.
+
+Code details:
+Please provide the path of the folder in which the images to be mosaiced are present to "path" variable in test_complete_panaroma.
+
+Please note that the code takes a lot of time to run. I enclosing some results which i computed. Please consider them while grading my assignment. Also, some of the pics are taken in the process of a 360 sweep of the camera. This led to the placement of the objects which were in the right side of the sample mosaic presented to be on the left side.
+
+Please mail: ajavvadi@umail.ucsb.edu if there are any difficulties in running my code.
